@@ -8,9 +8,9 @@
 
     <!-- opciones -->
     <!-- el componente se encaga de listar las opc de pokemon y al hacer click en alguna opc, verificar si es la correcta -->
-     <PokemonOptions />
-
+     <PokemonOptions :pokemons="pokemonArr"/>
     <!--  cuando se selecciona la opc avisar al componente pokemonpicture  -->
+
 </template>
 
 <script>
@@ -25,7 +25,27 @@ import getPokemonOptions from '@/helpers/getPokemonOptions'
 console.log(getPokemonOptions());
 
 export default {    
-    components: { PokemonPicture, PokemonOptions }
+    components: { PokemonPicture, PokemonOptions },
+
+    // data que el componente va a manejar es un metodo reactivo esta pedientede cualquier cambio, vuelve a renderizar
+    data() {
+        return {
+            pokemonArr: []
+
+        }
+    },
+    methods: {
+        async mixPokemonArray() { // es decir espera a q getPokemonOptions se resuelva y lo almacenas en pokemonArr
+            // getPokemonOptions() es una promesa esperar a q se resuelva 
+            this.pokemonArr = await getPokemonOptions()
+            // console.log(this.pokemonArr);
+        }
+    },
+    mounted() { // hook mounted: el componente ya esta monstado en pantalla disparar accion
+        console.log('mounted');
+        this.mixPokemonArray()
+    }
+
 }
 </script>
 
