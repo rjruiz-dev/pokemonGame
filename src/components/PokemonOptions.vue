@@ -2,7 +2,13 @@
     
     <div class="options-container">
         <ul>
-            <li v-for="pokemon in pokemons" :key="pokemon.id"> 
+            <li v-for="pokemon in pokemons" 
+            :key="pokemon.id"
+            @click="$emit( 'selection', pokemon.id )" 
+            >  <!-- @click dispara todo el procedimiento, emite un valor al padre, emite el id del pokemon  -->
+                <!-- $emit() , comunica el comp hijo con el comp padre  -->
+                <!--'selection', la seleccion de la opc  -->
+                <!-- pokemon.id, el id del pokemon selecionado  -->
                 {{ pokemon.name }}
             </li>
           

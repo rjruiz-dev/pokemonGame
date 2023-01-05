@@ -8,12 +8,20 @@
         <!-- img -->
         <!-- el componente se encaga de mostrar la imagen debe saber cuando mostrar y cuando ocultar -->
         <!-- v-bind es lo mismo que : (forma corta) -->
-        <PokemonPicture :pokemonId="pokemon.id" :showPokemon="showPokemon"/> <!-- :showPokemon ( permite renderizar de manera condicional, si es true muestra la imagen) -->
+        <PokemonPicture 
+            :pokemonId="pokemon.id" 
+            :showPokemon="showPokemon"/> 
+        <!-- :showPokemon ( permite renderizar de manera condicional, si es true muestra la imagen) -->
 
         <!-- opciones -->
         <!-- el componente se encaga de listar las opc de pokemon y al hacer click en alguna opc, verificar si es la correcta -->
-        <PokemonOptions :pokemons="pokemonArr"/>
+        <PokemonOptions 
+            :pokemons="pokemonArr"
+            @selection="checkAnswer($event)"
+        />
         <!--  cuando se selecciona la opc avisar al componente pokemonpicture  -->
+        <!--  @selection escuchar el evento selection -->
+        <!--  ="checkAnswer" sin parentesis cuando no tiene argumentos -->
 
     </div>
     
@@ -56,7 +64,16 @@ export default {
             const rndInt = Math.floor( Math.random() * 4 )
             // console.log(rndInt);
 
-            this.pokemon= this.pokemonArr[ rndInt ]
+            // this.pokemon el pokemon que la persona tenia q adivinar
+            this.pokemon = this.pokemonArr[ rndInt ]
+                      
+        },
+        //  this.pokemon = pokemonId la persona adivino correctamente
+        checkAnswer(pokemonId) {
+            // pokemonId el pokemon seleeccionado
+            console.log('Pokemon Page llamado', pokemonId);            
+            this.showPokemon = true
+           
         }
     },
     mounted() { // hook mounted: el componente ya esta monstado en pantalla disparar accion
