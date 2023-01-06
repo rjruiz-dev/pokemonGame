@@ -9,8 +9,8 @@
         <!-- el componente se encaga de mostrar la imagen debe saber cuando mostrar y cuando ocultar -->
         <!-- v-bind es lo mismo que : (forma corta) -->
         <PokemonPicture 
-            :pokemonId="pokemon.id" 
-            :showPokemon="showPokemon"/> 
+            :pokemon-id="pokemon.id" 
+            :show-pokemon="showPokemon"/> 
         <!-- :showPokemon ( permite renderizar de manera condicional, si es true muestra la imagen) -->
 
         <!-- opciones -->
@@ -23,6 +23,14 @@
         <!--  @selection escuchar el evento selection -->
         <!--  ="checkAnswer" sin parentesis cuando no tiene argumentos -->
 
+        <template v-if="showAnswer">
+            <h2 class="fade-in">{{ message }}</h2>  
+            <!-- Al presionar el boton reinicia el juego -->
+            <button @click="newGame">
+                Nuevo Juego
+            </button>
+        </template>
+        
     </div>
     
 </template>
@@ -46,15 +54,17 @@ export default {
         return {
             pokemonArr: [],
             pokemon: null, // este es el pokemon q va a tener el id y el nombre
-            showPokemon: false // para mostrar el pokemon al seleccionar la opc
-
+            showPokemon: false, // para mostrar el pokemon al seleccionar la opc
+            showAnswer: false, // para mostrar 
+            message: '' // el msj
         }
     },
     methods: {
         async mixPokemonArray() { // es decir espera a q getPokemonOptions se resuelva y lo almacenas en pokemonArr
+            console.log('dentro de mixPokemonArray');
             // getPokemonOptions() es una promesa esperar a q se resuelva 
             this.pokemonArr = await getPokemonOptions()
-            // console.log(this.pokemonArr);
+            console.log(this.pokemonArr);
 
             // pokemons de 0 a 3 opc
             // Math del obj global windows
@@ -68,11 +78,30 @@ export default {
             this.pokemon = this.pokemonArr[ rndInt ]
                       
         },
-        //  this.pokemon = pokemonId la persona adivino correctamente
-        checkAnswer(pokemonId) {
-            // pokemonId el pokemon seleeccionado
-            console.log('Pokemon Page llamado', pokemonId);            
+        //  this.pokemon = selectedId la persona adivino correctamente
+        checkAnswer( selectedId ) {
+             console.log('dentro de checkAnswer');
+            // selectedId el pokemon seleeccionado
+            // console.log('Pokemon Page llamado', selectedId);            
             this.showPokemon = true
+            this.showAnswer = true // muestra de manera condicional message y boton
+
+            if ( selectedId === this.pokemon.id ) {
+                this.message = `Correcto, ${ this.pokemon.name }`
+            } else {
+                this.message = `Oops, era ${ this.pokemon.name }`
+            }
+           
+        },
+        newGame() {
+            console.log('dentro de newGame');   
+            // reiniciar todo el juego          
+
+            this.showPokemon = false
+            this.showAnswer  = false
+            this.pokemonArr  = [] // vacio 
+            this.pokemon     = null // es el que mantiene la imagen
+            this.mixPokemonArray() // para tener la nueva seleccion de los 4 pokemon
            
         }
     },
